@@ -6,11 +6,13 @@ import lombok.RequiredArgsConstructor;
 import myaong.popolog.psservice.common.exception.ApiResponse;
 import myaong.popolog.psservice.dto.request.PsRequest;
 import myaong.popolog.psservice.dto.response.PsIdResponse;
+import myaong.popolog.psservice.dto.response.PsPreResponse;
 import myaong.popolog.psservice.dto.response.PsResponse;
-import myaong.popolog.psservice.dto.response.PsListResponse;
 import myaong.popolog.psservice.service.PsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/ps")
@@ -21,8 +23,8 @@ public class PsController {
 
     @Operation(summary = "API 명세서 v0.3 line 65", description = "자기소개서 목록 조회")
     @GetMapping
-    public ResponseEntity<ApiResponse<PsListResponse>> getPsList() {
-        PsListResponse response = psService.getPsList();
+    public ResponseEntity<ApiResponse<List<PsPreResponse>>> getPsList() {
+        List<PsPreResponse> response = psService.getPsList();
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 

@@ -5,15 +5,16 @@ import myaong.popolog.psservice.common.exception.ApiCode;
 import myaong.popolog.psservice.common.exception.ApiException;
 import myaong.popolog.psservice.dto.request.PsRequest;
 import myaong.popolog.psservice.dto.response.PsIdResponse;
+import myaong.popolog.psservice.dto.response.PsPreResponse;
 import myaong.popolog.psservice.dto.response.PsResponse;
-import myaong.popolog.psservice.dto.response.PsListResponse;
 import myaong.popolog.psservice.entity.Ps;
 import myaong.popolog.psservice.repository.PsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,18 +23,25 @@ public class PsService {
 
     private final PsRepository psRepository;
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public PsListResponse getPsList() {
+    @Transactional(readOnly = true)
+    public List<PsPreResponse> getPsList() {
 
-        List<PsResponse> psResponses = psRepository.findAll().stream()
-                .map(ps -> new PsResponse(ps.getTitle(), ps.getPosition(), ps.getReason(), ps.getContent()))
-                .collect(Collectors.toList());
+        List<PsPreResponse> res = new ArrayList<>();
+        psRepository.findAll()
+                .forEach(ps ->
+                    res.add(PsPreResponse.builder()
+                            .psId(ps.getId())
+                            .title(ps.getTitle())
+                            .position(ps.getPosition())
+                            .timestamp(ps.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                            .build())
+                );
 
-        return new PsListResponse(psResponses);
+        return res;
     }
 
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public PsResponse getPs(Long psId) {
         Ps ps = psRepository.findById(1L).orElseThrow(() -> new RuntimeException("PS not found"));
         return new PsResponse(ps.getTitle(), ps.getPosition(), ps.getReason(), ps.getContent());
