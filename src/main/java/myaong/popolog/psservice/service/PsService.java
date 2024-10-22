@@ -33,8 +33,8 @@ public class PsService {
                             .psId(ps.getId())
                             .title(ps.getTitle())
                             .position(ps.getPosition())
-//                            .timestamp(ps.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
-                            .timestamp("2024-10-22 15:48:21")   // 임시 하드코딩
+//                            .timestamp(ps.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                            .timestamp("2024.10.22")   // 임시 하드코딩
                             .build())
                 );
 
