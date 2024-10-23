@@ -35,6 +35,7 @@ public class PsService {
                             .position(ps.getPosition())
 //                            .timestamp(ps.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                             .timestamp("2024.10.22")   // 임시 하드코딩
+                            .content(ps.getContent())
                             .build())
                 );
 
