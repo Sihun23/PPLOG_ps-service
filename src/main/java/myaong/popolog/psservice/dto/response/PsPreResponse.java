@@ -10,4 +10,5 @@ public class PsPreResponse {
 	private String title;
 	private String position;
 	private String timestamp;
+	private String content;
 }
