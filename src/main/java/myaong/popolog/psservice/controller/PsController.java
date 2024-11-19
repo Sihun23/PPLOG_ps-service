@@ -21,44 +21,60 @@ public class PsController {
 
     private final PsService psService;
 
-    @Operation(summary = "API 명세서 v0.3 line 65", description = "자기소개서 목록 조회")
+    @Operation(summary = "API 명세서 v0.4 line 67", description = "자기소개서 목록 조회")
     @GetMapping
     public ResponseEntity<ApiResponse<List<PsPreResponse>>> getPsList() {
         List<PsPreResponse> response = psService.getPsList();
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
-    @Operation(summary = "API 명세서 v0.3 line 66", description = "자기소개서 조회")
+    @Operation(summary = "API 명세서 v0.4 line 68", description = "자기소개서 조회")
     @GetMapping("/{psId}")
-    public ResponseEntity<ApiResponse<PsResponse>> getPs(@PathVariable Long psId) {
+    public ResponseEntity<ApiResponse<PsResponse>> getPs(
+            @RequestHeader("memberId") String memberId,
+            @PathVariable Long psId) {
+        Long convertedMemberId = Long.valueOf(memberId);
         PsResponse response = psService.getPs(psId);
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
-    @Operation(summary = "API 명세서 v0.3 line 67", description = "자기소개서 작성")
+    @Operation(summary = "API 명세서 v0.4 line 69", description = "자기소개서 작성")
     @PostMapping
-    public ResponseEntity<ApiResponse<PsIdResponse>> createPs(@Valid @RequestBody PsRequest psRequest) {
-        PsIdResponse response = psService.createPs(psRequest);
+    public ResponseEntity<ApiResponse<PsIdResponse>> createPs(
+            @RequestHeader("memberId") String memberId,
+            @Valid @RequestBody PsRequest psRequest) {
+        Long convertedMemberId = Long.valueOf(memberId);
+        PsIdResponse response = psService.createPs(psRequest, convertedMemberId);
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
-    @Operation(summary = "API 명세서 v0.3 line 68", description = "자기소개서 수정")
+    @Operation(summary = "API 명세서 v0.4 line 70", description = "자기소개서 수정")
     @PutMapping("/{psId}")
-    public ResponseEntity<ApiResponse<Object>> updatePs(@PathVariable Long psId, @Valid @RequestBody PsRequest psRequest) {
+    public ResponseEntity<ApiResponse<Object>> updatePs(
+            @RequestHeader("memberId") String memberId,
+            @PathVariable Long psId,
+            @Valid @RequestBody PsRequest psRequest) {
+        Long convertedMemberId = Long.valueOf(memberId);
         psService.updatePs(psId, psRequest);
         return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
 
-    @Operation(summary = "API 명세서 v0.3 line 69", description = "자기소개서 목록 삭제")
+    @Operation(summary = "API 명세서 v0.4 line 71", description = "자기소개서 목록 삭제")
     @DeleteMapping("/{psId}")
-    public ResponseEntity<ApiResponse<Object>> deletePs(@PathVariable Long psId) {
+    public ResponseEntity<ApiResponse<Object>> deletePs(
+            @RequestHeader("memberId") String memberId,
+            @PathVariable Long psId) {
+        Long convertedMemberId = Long.valueOf(memberId);
         psService.deletePs(psId);
         return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
 
-    @Operation(summary = "API 명세서 v0.3 line 70", description = "자기소개서 목록 첨삭")
+    @Operation(summary = "API 명세서 v0.4 line 72", description = "자기소개서 목록 첨삭")
     @GetMapping("/{psId}/editing")
-    public ResponseEntity<ApiResponse<PsResponse>> editPs(@PathVariable Long psId) {
+    public ResponseEntity<ApiResponse<PsResponse>> editPs(
+            @RequestHeader("memberId") String memberId, // memberId를 String으로 받음
+            @PathVariable Long psId) {
+        Long convertedMemberId = Long.valueOf(memberId);
         PsResponse psResponse = psService.editPs(psId);
         return ResponseEntity.ok(ApiResponse.onSuccess(psResponse));
     }
