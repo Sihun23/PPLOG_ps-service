@@ -22,10 +22,11 @@ public class PsService {
 
     private final PsRepository psRepository;
 
+    // 특정 회원의 자기소개서 목록 조회
     @Transactional(readOnly = true)
-    public List<PsPreResponse> getPsList() {
+    public List<PsPreResponse> getPsList(Long memberId) {
         List<PsPreResponse> res = new ArrayList<>();
-        psRepository.findAll()
+        psRepository.findByMemberId(memberId) // memberId로 조회
                 .forEach(ps ->
                         res.add(PsPreResponse.builder()
                                 .psId(ps.getId())
@@ -39,16 +40,16 @@ public class PsService {
     }
 
     @Transactional(readOnly = true)
-    public PsResponse getPs(Long psId) {
+    public PsResponse getPs(Long psId, Long memberId) {
         Ps ps = psRepository.findById(psId)
                 .orElseThrow(() -> new ApiException(ApiCode.PS_NOT_FOUND));
+        validateMember(ps, memberId);
         return new PsResponse(ps.getTitle(), ps.getPosition(), ps.getReason(), ps.getContent());
     }
 
-    @Transactional(readOnly = true)
     public PsIdResponse createPs(PsRequest psRequest, Long memberId) {
         Ps ps = Ps.builder()
-                .memberId(memberId) //
+                .memberId(memberId)
                 .title(psRequest.getTitle())
                 .position(psRequest.getPosition())
                 .reason(psRequest.getReason())
@@ -59,31 +60,38 @@ public class PsService {
         return new PsIdResponse(ps.getId());
     }
 
-    @Transactional(readOnly = true)
-    public void updatePs(Long psId, PsRequest psRequest) {
+    public void updatePs(Long psId, PsRequest psRequest, Long memberId) {
         Ps ps = psRepository.findById(psId)
                 .orElseThrow(() -> new ApiException(ApiCode.PS_NOT_FOUND));
+        validateMember(ps, memberId);
         ps.update(psRequest.getTitle(), psRequest.getPosition(), psRequest.getReason(), psRequest.getContent());
         psRepository.save(ps);
     }
 
-    @Transactional(readOnly = true)
-    public void deletePs(Long psId) {
+    public void deletePs(Long psId, Long memberId) {
         Ps ps = psRepository.findById(psId)
                 .orElseThrow(() -> new ApiException(ApiCode.PS_NOT_FOUND));
+        validateMember(ps, memberId);
         psRepository.delete(ps);
     }
 
-    @Transactional(readOnly = true)
-    public PsResponse editPs(Long psId) {
+    public PsResponse editPs(Long psId, Long memberId) {
         Ps ps = psRepository.findById(psId)
                 .orElseThrow(() -> new ApiException(ApiCode.PS_NOT_FOUND));
-
+        validateMember(ps, memberId);
         return new PsResponse(
                 ps.getTitle() + " 첨삭 ver",
                 ps.getPosition(),
                 ps.getReason(),
                 "첨삭 내용"
         );
+    }
+
+    // 회원의 권한 확인
+    private void validateMember(Ps ps, Long memberId) {
+        if (!ps.getMemberId().equals(memberId)) {
+            throw new ApiException(ApiCode.PS_NOT_FOUND);
+        }
+
     }
 }
