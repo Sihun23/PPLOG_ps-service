@@ -44,6 +44,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    // prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     // Swagger(Spring 3.x.x 이상부터 SpringFox 대신, SpringDoc)
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
