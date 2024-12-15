@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import myaong.popolog.psservice.common.exception.ApiResponse;
 import myaong.popolog.psservice.dto.request.PsRequest;
+import myaong.popolog.psservice.dto.response.PsEditResponse;
 import myaong.popolog.psservice.dto.response.PsIdResponse;
 import myaong.popolog.psservice.dto.response.PsPreResponse;
 import myaong.popolog.psservice.dto.response.PsResponse;
@@ -65,13 +66,13 @@ public class PsController {
         psService.deletePs(psId, memberId);
         return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
-
-    @Operation(summary = "API 명세서 v0.4 line 71", description = "자기소개서 목록 첨삭")
+    //TODO: 프론트 요구사항이 추가로 발생한다면, 반영할 수 있도록 함
+    @Operation(summary = "API 명세서 v0.4 line 71", description = "자기소개서 첨삭")
     @GetMapping("/{psId}/editing")
-    public ResponseEntity<ApiResponse<PsResponse>> editPs(
-            @RequestHeader("memberId") Long memberId,
-            @PathVariable Long psId) {
-        PsResponse psResponse = psService.editPs(psId, memberId);
-        return ResponseEntity.ok(ApiResponse.onSuccess(psResponse));
+    public ResponseEntity<ApiResponse<PsEditResponse>> getEditedPs(
+            @PathVariable Long psId,
+            @RequestHeader("memberId") Long memberId) {
+        PsEditResponse response = psService.getEditedPs(psId, memberId);
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 }
