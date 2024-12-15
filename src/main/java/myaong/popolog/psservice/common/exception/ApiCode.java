@@ -16,7 +16,8 @@ public enum ApiCode {
 	DB_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_5001", "DB Error"),
 
 	PS_NOT_FOUND(HttpStatus.NOT_FOUND, "PS_4040", "존재하지 않는 자기소개서입니다."),
-	;
+
+	AI_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AI_5000", "AI Server Error");
 
 	private final HttpStatus httpStatus;
 	private final String code;
